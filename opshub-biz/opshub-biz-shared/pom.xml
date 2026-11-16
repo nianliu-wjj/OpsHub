@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>opshub-biz-shared</artifactId>
+    <version>${biz.shared.release.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>

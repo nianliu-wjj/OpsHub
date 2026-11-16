@@ -8,5 +8,6 @@
     </parent>
 
     <artifactId>opshub-domain-model</artifactId>
+    <version>${domain.model.release.version}</version>
     <packaging>jar</packaging>
 </project>

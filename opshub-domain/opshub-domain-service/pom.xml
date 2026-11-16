@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>opshub-domain-service</artifactId>
+    <version>${domain.service.release.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>

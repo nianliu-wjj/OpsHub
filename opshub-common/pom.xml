@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>opshub-common</artifactId>
+    <version>${common.release.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>opshub-bootstrap</artifactId>
+    <version>${bootstrap.release.version}</version>
     <packaging>jar</packaging>
 
    <dependencies>

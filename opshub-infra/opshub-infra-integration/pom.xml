@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>opshub-infra-integration</artifactId>
+    <version>${infra.integration.release.version}</version>
     <packaging>jar</packaging>
 
      <dependencies>

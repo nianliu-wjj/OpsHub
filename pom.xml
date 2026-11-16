@@ -27,19 +27,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- 接口契约层独立发布版本号（编码规范 §2.4 规则 3） -->
+        <!-- 各模块独立发布版本号，不随工程快照波动（编码规范 §2.4 规则 3） -->
         <api.release.version>1.0.0</api.release.version>
+        <common.release.version>1.0.0</common.release.version>
+        <domain.model.release.version>1.0.0</domain.model.release.version>
+        <domain.service.release.version>1.0.0</domain.service.release.version>
+        <infra.dal.release.version>1.0.0</infra.dal.release.version>
+        <infra.integration.release.version>1.0.0</infra.integration.release.version>
+        <biz.shared.release.version>1.0.0</biz.shared.release.version>
+        <biz.impl.release.version>1.0.0</biz.impl.release.version>
+        <bootstrap.release.version>1.0.0</bootstrap.release.version>
+        <test.release.version>1.0.0</test.release.version>
 
-        <!-- 各模块独立版本号，不随项目版本号波动 -->
-        <opshub.common.version>1.0-SNAPSHOT</opshub.common.version>
-        <opshub.domain.model.version>1.0-SNAPSHOT</opshub.domain.model.version>
-        <opshub.domain.service.version>1.0-SNAPSHOT</opshub.domain.service.version>
-        <opshub.infra.dal.version>1.0-SNAPSHOT</opshub.infra.dal.version>
-        <opshub.infra.integration.version>1.0-SNAPSHOT</opshub.infra.integration.version>
-        <opshub.biz.shared.version>1.0-SNAPSHOT</opshub.biz.shared.version>
-        <opshub.biz.impl.version>1.0-SNAPSHOT</opshub.biz.impl.version>
-        <opshub.bootstrap.version>1.0-SNAPSHOT</opshub.bootstrap.version>
-        <testng.version>7.4.0</testng.version>
+        <!-- 第三方依赖版本号 -->
+        <testng.release.version>7.4.0</testng.release.version>
     </properties>
 
     <dependencyManagement>
@@ -47,42 +48,42 @@
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-domain-model</artifactId>
-                <version>${opshub.domain.model.version}</version>
+                <version>${domain.model.release.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-common</artifactId>
-                <version>${opshub.common.version}</version>
+                <version>${common.release.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-infra-dal</artifactId>
-                <version>${opshub.infra.dal.version}</version>
+                <version>${infra.dal.release.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-infra-integration</artifactId>
-                <version>${opshub.infra.integration.version}</version>
+                <version>${infra.integration.release.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-domain-service</artifactId>
-                <version>${opshub.domain.service.version}</version>
+                <version>${domain.service.release.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-biz-shared</artifactId>
-                <version>${opshub.biz.shared.version}</version>
+                <version>${biz.shared.release.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-biz-impl</artifactId>
-                <version>${opshub.biz.impl.version}</version>
+                <version>${biz.impl.release.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.nianliu.opshub</groupId>
                 <artifactId>opshub-bootstrap</artifactId>
-                <version>${opshub.bootstrap.version}</version>
+                <version>${bootstrap.release.version}</version>
             </dependency>
 
             <!-- 接口契约：独立版本发布，不随工程快照波动（调用方只引契约，§2.4 规则 3） -->
@@ -95,7 +96,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
+                <version>${testng.release.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

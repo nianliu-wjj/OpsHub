@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>opshub-test</artifactId>
+    <version>${test.release.version}</version>
     <packaging>jar</packaging>
 
     <!-- 测试域（编码规范 §2.4 矩阵）：独立测试模块，仅依赖启动装配（唯一聚合出口，§2.7.10）；

@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>opshub-infra-dal</artifactId>
+    <version>${infra.dal.release.version}</version>
     <packaging>jar</packaging>
 
     <dependencies>
