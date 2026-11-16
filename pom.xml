@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.nianliu.opshub</groupId>
+    <artifactId>OpsHub</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>OpsHub</name>
+    <description>按《Java 后端编码规范》五层模块群组织的多模块工程（启动装配 / 接口契约 / 接口实现 / 领域 / 基础设施）</description>
+
+    <modules>
+        <module>opshub-api</module>
+        <module>opshub-biz</module>
+        <module>opshub-bootstrap</module>
+        <module>opshub-common</module>
+        <module>opshub-domain</module>
+        <module>opshub-infra</module>
+        <module>opshub-test</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- 接口契约层独立发布版本号（编码规范 §2.4 规则 3） -->
+        <api.release.version>1.0.0</api.release.version>
+
+        <!-- 各模块独立版本号，不随项目版本号波动 -->
+        <opshub.common.version>1.0-SNAPSHOT</opshub.common.version>
+        <opshub.domain.model.version>1.0-SNAPSHOT</opshub.domain.model.version>
+        <opshub.domain.service.version>1.0-SNAPSHOT</opshub.domain.service.version>
+        <opshub.infra.dal.version>1.0-SNAPSHOT</opshub.infra.dal.version>
+        <opshub.infra.integration.version>1.0-SNAPSHOT</opshub.infra.integration.version>
+        <opshub.biz.shared.version>1.0-SNAPSHOT</opshub.biz.shared.version>
+        <opshub.biz.impl.version>1.0-SNAPSHOT</opshub.biz.impl.version>
+        <opshub.bootstrap.version>1.0-SNAPSHOT</opshub.bootstrap.version>
+        <testng.version>7.4.0</testng.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-domain-model</artifactId>
+                <version>${opshub.domain.model.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-common</artifactId>
+                <version>${opshub.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-infra-dal</artifactId>
+                <version>${opshub.infra.dal.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-infra-integration</artifactId>
+                <version>${opshub.infra.integration.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-domain-service</artifactId>
+                <version>${opshub.domain.service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-biz-shared</artifactId>
+                <version>${opshub.biz.shared.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-biz-impl</artifactId>
+                <version>${opshub.biz.impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-bootstrap</artifactId>
+                <version>${opshub.bootstrap.version}</version>
+            </dependency>
+
+            <!-- 接口契约：独立版本发布，不随工程快照波动（调用方只引契约，§2.4 规则 3） -->
+            <dependency>
+                <groupId>com.nianliu.opshub</groupId>
+                <artifactId>opshub-api</artifactId>
+                <version>${api.release.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-dependency-rules</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence/>
+                                 <bannedDependencies>
+                                    <excludes>
+                                        <exclude>log4j:log4j</exclude>
+                                        <exclude>commons-logging:commons-logging</exclude>
+                                    </excludes>
+                                    <message>同类能力只允许统一实现，见编码规范 §2.5</message>
+                                </bannedDependencies>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
