@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  流程编排（编码规范 §33.1 / §33.2）：业务流程以「节点链」形式在此声明。
+  节点类位于 com.nianliu.opshub.domain.service.flow.node 按业务分包；
+  流程槽传参；节点内不做事务控制。
+-->
+<flows>
+    <!-- 示例：<flow code="DEMO_FLOW"><node ref="xxxNode"/></flow> -->
+</flows>
