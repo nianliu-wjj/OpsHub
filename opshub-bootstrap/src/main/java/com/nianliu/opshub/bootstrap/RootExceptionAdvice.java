@@ -19,6 +19,8 @@ public class RootExceptionAdvice {
  public Result<Void> invalid(Exception e) { return Result.fail("A0400","请求参数格式或校验不通过"); }
  @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class) @ResponseStatus(HttpStatus.NOT_FOUND)
  public Result<Void> missing(Exception e) { return Result.fail("A0404","资源不存在"); }
+ @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class) @ResponseStatus(HttpStatus.FORBIDDEN)
+ public Result<Void> denied(org.springframework.security.access.AccessDeniedException e) { return Result.fail("A0403", "权限不足"); }
  @ExceptionHandler(Exception.class) @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
  public Result<Void> unexpected(Exception e) { org.slf4j.LoggerFactory.getLogger(getClass()).error("系统异常@unexpected",e); return Result.fail("B0500","系统繁忙，请稍后重试"); }
 }

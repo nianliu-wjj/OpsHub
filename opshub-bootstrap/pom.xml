@@ -12,6 +12,15 @@
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-common</artifactId></dependency>
 <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-api</artifactId></dependency>
 <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-model</artifactId></dependency>
