@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
  * @author nianliu-wjj
  * @since 2026-11-18
  */
+@org.springframework.core.annotation.Order(org.springframework.core.Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @ResponseBody
 public class RbacExceptionAdvice {

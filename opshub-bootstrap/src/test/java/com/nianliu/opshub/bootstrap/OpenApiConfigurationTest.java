@@ -78,6 +78,19 @@ class OpenApiConfigurationTest {
         org.junit.jupiter.api.Assertions.assertTrue(new BCryptPasswordEncoder().matches("change-me-123",encoded.getValue()));
     }
 
+    @Test
+    void uniqueConstraintConflictUses409Envelope() throws Exception {
+        org.mockito.Mockito.when(rbacService.saveAccount(org.mockito.ArgumentMatchers.isNull(),
+                org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyString()))
+                .thenThrow(new org.springframework.dao.DataIntegrityViolationException("duplicate"));
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/rbac/accounts")
+                .with(user("admin").roles("ADMIN"))
+                .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType("application/json")
+                .content("{\"username\":\"operator\",\"password\":\"change-me-123\",\"enable\":1,\"locked\":0}"))
+                .andExpect(status().isConflict());
+    }
+
     /**
      * @author nianliu-wjj
      * @since 2026-11-18
@@ -85,7 +98,7 @@ class OpenApiConfigurationTest {
     @Configuration
     @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
     @Import({OpenApiConfiguration.class, SecurityConfiguration.class, SecuritySessionController.class,
-            FastJsonConverterConfig.class, RootExceptionAdvice.class,
+            FastJsonConverterConfig.class, RootExceptionAdvice.class, RbacExceptionAdvice.class,
             com.nianliu.opshub.biz.impl.rbac.RbacController.class, RbacPermission.class,
             com.nianliu.opshub.biz.shared.template.BizProcessTemplate.class,
             com.nianliu.opshub.biz.shared.template.DegradeGuard.class})
