@@ -37,3 +37,10 @@ build/
 
 *.log
 logs/
+
+.tmp-mvn/
+*.ps1
+*.pom
+.tmp**
+
+.agents

@@ -25,5 +25,22 @@
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-domain-service</artifactId>
         </dependency>
+        <!-- 显式声明：直接引用 common 的注解/校验组件（传递依赖只作运行时可见保障，编译期类一律显式声明） -->
+        <dependency>
+            <groupId>com.nianliu.opshub</groupId>
+            <artifactId>opshub-common</artifactId>
+        </dependency>
+
+        <!-- Web 契约：Controller 返回 Result 信封需要 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+
+        <!-- 编译期样板代码消除（接口实现层使用 Lombok 简化 getter/setter/构造器） -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 </project>

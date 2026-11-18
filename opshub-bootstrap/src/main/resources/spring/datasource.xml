@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  混合装配（编码规范 §2.7.1）：注解扫描业务包 + XML 装配基础设施（数据源、事务模板等）。
+  本文件为分片数据源与事务模板的自定义装配占位：
+  须关闭框架默认数据源自动装配，数据源由分片数据源在此自定义装配（§20.4）；
+  双数据源 = 分库分表业务库 + 单库管理配置库（配置类查询不进分片库，§20.4 跨片约束）。
+
+  说明：
+  1. 框架默认数据源自动装配已在 application.properties 中通过 spring.autoconfigure.exclude 关闭；
+  2. 占位属性统一由 config/app-{env}.properties 提供，禁止在 XML 中硬编码连接信息；
+  3. SqlSessionFactory / Mapper 扫描由 MyBatis-Flex 自动装配基于下方 dataSource 完成，
+     业务侧只需在 opshub-infra-dal 的 resources/sqlmap 下放置 Mapper XML。
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- ${...} 占位符由 Spring Boot 自动注册的 PropertySourcesPlaceholderConfigurer 解析，
+         无需在此重复声明，避免与自动装配冲突 -->
+
+    <!-- ==================== 数据源：HikariCP ==================== -->
+    <!-- 分片数据源接入后，此处替换为分片数据源（如 ShardingSphere 的 ShardingDataSource），
+         保持 Bean 名称 dataSource 不变，上层 MyBatis-Flex 与事务管理器无需改动 -->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="driverClassName" value="${opshub.datasource.driver-class-name}"/>
+        <property name="jdbcUrl" value="${opshub.datasource.jdbc-url}"/>
+        <property name="username" value="${opshub.datasource.username}"/>
+        <property name="password" value="${opshub.datasource.password}"/>
+        <property name="minimumIdle" value="${opshub.datasource.hikari.minimum-idle}"/>
+        <property name="maximumPoolSize" value="${opshub.datasource.hikari.maximum-pool-size}"/>
+        <property name="connectionTimeout" value="${opshub.datasource.hikari.connection-timeout}"/>
+        <property name="idleTimeout" value="${opshub.datasource.hikari.idle-timeout}"/>
+        <property name="maxLifetime" value="${opshub.datasource.hikari.max-lifetime}"/>
+        <property name="poolName" value="${opshub.datasource.hikari.pool-name}"/>
+    </bean>
+
+    <!-- ==================== 事务管理器 ==================== -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 提交失败时回滚，与声明式事务保持一致 -->
+        <property name="rollbackOnCommitFailure" value="true"/>
+    </bean>
+
+    <!-- ==================== 编程式事务模板 ==================== -->
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+        <!-- 默认传播行为 REQUIRED，超时 30s -->
+        <property name="propagationBehaviorName" value="PROPAGATION_REQUIRED"/>
+        <property name="timeout" value="30"/>
+    </bean>
+
+    <!-- 占位：接入具体分片中间件 / 多数据源后，在此补充分片数据源与多事务管理器 Bean 定义 -->
+
+</beans>

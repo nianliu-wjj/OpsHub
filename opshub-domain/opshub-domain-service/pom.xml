@@ -24,5 +24,11 @@
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-infra-integration</artifactId>
         </dependency>
+
+        <!-- 编译期样板代码消除 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 </project>

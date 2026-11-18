@@ -16,5 +16,25 @@
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-common</artifactId>
         </dependency>
+
+        <!-- ==================== 三方依赖：外部集成（HTTP / RPC / 消息）所需 ==================== -->
+
+        <!-- JSON 序列化：Fastjson2 -->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+        </dependency>
+
+        <!-- 通用工具：commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- 编译期样板代码消除 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 </project>

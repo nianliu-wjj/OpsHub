@@ -23,5 +23,19 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Spring Boot 测试支持：仅 test 作用域，不污染主工程 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 编译期样板代码消除（测试域可见主工程能力） -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

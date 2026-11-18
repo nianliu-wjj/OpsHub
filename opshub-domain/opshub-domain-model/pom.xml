@@ -10,4 +10,12 @@
     <artifactId>opshub-domain-model</artifactId>
     <version>${domain.model.release.version}</version>
     <packaging>jar</packaging>
+
+    <!-- 领域模型：POJO 与值对象，仅依赖编译期样板消除（无框架耦合） -->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
 </project>
