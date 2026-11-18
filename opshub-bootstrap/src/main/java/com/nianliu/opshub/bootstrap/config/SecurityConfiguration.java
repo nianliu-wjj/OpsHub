@@ -49,7 +49,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
-                        .requestMatchers("/actuator/**").hasRole("ADMIN")
+                        .requestMatchers("/actuator/**", "/v3/api-docs", "/v3/api-docs/**",
+                                "/swagger-ui.html", "/swagger-ui/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(basic -> basic.authenticationEntryPoint((request, response, exception) ->
                         writeFailure(response, 401, "A0401", "请提供有效的认证凭据")))
