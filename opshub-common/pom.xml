@@ -12,6 +12,8 @@
     <packaging>jar</packaging>
 
     <dependencies>
+<dependency><groupId>jakarta.validation</groupId><artifactId>jakarta.validation-api</artifactId></dependency>
+
         <dependency>
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-domain-model</artifactId>
@@ -19,6 +21,38 @@
         <dependency>
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-api</artifactId>
+        </dependency>
+
+        <!-- ==================== 三方依赖：横切能力（日志门面 / 工具 / 序列化）唯一定义点 ==================== -->
+
+        <!-- SpEL 基建：OpsLog 求值核继承 CachedExpressionEvaluator -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <!-- 日志门面：横切组件只依赖 slf4j-api，实现由 bootstrap 装配层统一提供 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- 通用工具：commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- JSON 序列化：Fastjson2 -->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+        </dependency>
+
+        <!-- 编译期样板代码消除 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 </project>

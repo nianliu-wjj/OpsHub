@@ -12,9 +12,22 @@
     <packaging>jar</packaging>
 
     <dependencies>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-model</artifactId></dependency>
+
         <dependency>
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-domain-service</artifactId>
+        </dependency>
+        <!-- 显式声明：统一接入模板第②步直接调用 common 的 RequestValidator（编译期显式原则） -->
+        <dependency>
+            <groupId>com.nianliu.opshub</groupId>
+            <artifactId>opshub-common</artifactId>
+        </dependency>
+
+        <!-- 编译期样板代码消除 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 </project>
