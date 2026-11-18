@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.io.IOException;
@@ -37,18 +36,31 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService userDetailsService(
             @Value("${opshub.security.admin.username}") String username,
-            @Value("${opshub.security.admin.password-hash}") String passwordHash) {
+            @Value("${opshub.security.admin.password-hash}") String passwordHash,
+            @Value("${opshub.security.database-enabled:false}") boolean databaseEnabled,
+            org.springframework.beans.factory.ObjectProvider<com.nianliu.opshub.domain.service.rbac.RbacService> services) {
         if (username.isBlank() || !passwordHash.matches("\\$2[aby]\\$\\d{2}\\$[./A-Za-z0-9]{53}")) {
             throw new IllegalArgumentException("必须配置管理员用户名及 BCrypt 密码摘要");
         }
-        return new InMemoryUserDetailsManager(User.withUsername(username)
-                .password(passwordHash).roles("ADMIN").build());
+        var bootstrap = User.withUsername(username).password(passwordHash).roles("ADMIN").build();
+        return login -> {
+            if (username.equals(login)) return bootstrap;
+            if (!databaseEnabled) throw new org.springframework.security.core.userdetails.UsernameNotFoundException("账号不存在");
+            var service = services.getObject();
+            var account = service.credentials(login);
+            if (account == null) throw new org.springframework.security.core.userdetails.UsernameNotFoundException("账号不存在");
+            return User.withUsername(login).password((String) account.get("password"))
+                    .disabled(!Integer.valueOf(1).equals(account.get("enable")))
+                    .accountLocked(Integer.valueOf(1).equals(account.get("locked")))
+                    .authorities(service.authorities(((Number) account.get("id")).longValue()).toArray(String[]::new)).build();
+        };
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
+                        .requestMatchers("/rbac/**").authenticated()
                         .requestMatchers("/actuator/**", "/v3/api-docs", "/v3/api-docs/**",
                                 "/swagger-ui.html", "/swagger-ui/**").hasRole("ADMIN")
                         .anyRequest().authenticated())

@@ -30,6 +30,7 @@ class SecurityConfigurationTest {
 
     @DynamicPropertySource
     static void credentials(DynamicPropertyRegistry registry) {
+        registry.add("opshub.security.database-enabled", () -> "false");
         registry.add("opshub.security.admin.username", () -> "admin");
         registry.add("opshub.security.admin.password-hash",
                 () -> new BCryptPasswordEncoder().encode("test-password"));

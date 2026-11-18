@@ -11,7 +11,7 @@
     <version>${infra.dal.release.version}</version>
     <packaging>jar</packaging>
 
-    <dependencies>
+    <dependencies><dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-api</artifactId></dependency>
         <dependency>
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-domain-model</artifactId>

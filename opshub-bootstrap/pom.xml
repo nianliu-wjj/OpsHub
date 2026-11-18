@@ -11,7 +11,10 @@
     <version>${bootstrap.release.version}</version>
     <packaging>jar</packaging>
 
-    <dependencies>
+    <dependencies><dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-infra-integration</artifactId></dependency><dependency><groupId>org.springframework</groupId><artifactId>spring-jdbc</artifactId></dependency><dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><scope>test</scope></dependency>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-service</artifactId></dependency>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-infra-dal</artifactId></dependency>
+
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

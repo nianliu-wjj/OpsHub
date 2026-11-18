@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
 
     <!-- 接口契约层：零内部依赖（不引任何 opshub 模块），仅允许编译期样板消除，保持契约纯净可独立发布 -->
-    <dependencies>
+    <dependencies><dependency><groupId>jakarta.validation</groupId><artifactId>jakarta.validation-api</artifactId></dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

@@ -32,9 +32,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OpenApiConfigurationTest {
     @Autowired
     private MockMvc mvc;
+    @org.springframework.test.context.bean.override.mockito.MockitoBean
+    private com.nianliu.opshub.domain.service.rbac.RbacService rbacService;
 
     @DynamicPropertySource
     static void credentials(DynamicPropertyRegistry registry) {
+        registry.add("opshub.security.database-enabled", () -> "false");
         registry.add("opshub.security.admin.username", () -> "admin");
         registry.add("opshub.security.admin.password-hash", () -> new BCryptPasswordEncoder().encode("test-password"));
     }
@@ -48,6 +51,8 @@ class OpenApiConfigurationTest {
         assertEquals("basic", document.getJSONObject("components").getJSONObject("securitySchemes")
                 .getJSONObject("basicAuth").getString("scheme"));
         org.junit.jupiter.api.Assertions.assertTrue(document.getJSONObject("paths").containsKey("/auth/me"));
+        org.junit.jupiter.api.Assertions.assertTrue(document.getJSONObject("paths").containsKey("/rbac/accounts"));
+        org.junit.jupiter.api.Assertions.assertTrue(document.getJSONObject("paths").getJSONObject("/rbac/accounts/{id}").getJSONObject("delete").getJSONArray("parameters").toJSONString().contains("version"));
     }
 
     @Test
@@ -57,6 +62,22 @@ class OpenApiConfigurationTest {
         mvc.perform(get("/swagger-ui/index.html").with(user("admin").roles("ADMIN"))).andExpect(status().isOk());
     }
 
+    @Test
+    void accountCreationUsesTypedRequestAndEncodesPassword() throws Exception {
+        org.mockito.Mockito.when(rbacService.saveAccount(org.mockito.ArgumentMatchers.isNull(),
+                org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyString())).thenReturn(7L);
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/rbac/accounts")
+                .with(user("admin").roles("ADMIN"))
+                .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType("application/json")
+                .content("{\"username\":\"operator\",\"password\":\"change-me-123\",\"enable\":1,\"locked\":0}"))
+                .andExpect(status().isOk());
+        var encoded=org.mockito.ArgumentCaptor.forClass(String.class);
+        org.mockito.Mockito.verify(rbacService).saveAccount(org.mockito.ArgumentMatchers.isNull(),
+                org.mockito.ArgumentMatchers.any(),encoded.capture());
+        org.junit.jupiter.api.Assertions.assertTrue(new BCryptPasswordEncoder().matches("change-me-123",encoded.getValue()));
+    }
+
     /**
      * @author nianliu-wjj
      * @since 2026-11-18
@@ -64,7 +85,10 @@ class OpenApiConfigurationTest {
     @Configuration
     @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
     @Import({OpenApiConfiguration.class, SecurityConfiguration.class, SecuritySessionController.class,
-            FastJsonConverterConfig.class, RootExceptionAdvice.class})
+            FastJsonConverterConfig.class, RootExceptionAdvice.class,
+            com.nianliu.opshub.biz.impl.rbac.RbacController.class, RbacPermission.class,
+            com.nianliu.opshub.biz.shared.template.BizProcessTemplate.class,
+            com.nianliu.opshub.biz.shared.template.DegradeGuard.class})
     static class TestConfiguration {
     }
 }
