@@ -2,6 +2,10 @@ package com.nianliu.opshub.common.validation;
 
 import jakarta.validation.*;
 import com.nianliu.opshub.domain.model.exception.ParamRejectException;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 public final class BeanValidator {
  private BeanValidator() {}
  private static final class Holder { static final ValidatorFactory FACTORY=Validation.buildDefaultValidatorFactory(); static final Validator VALIDATOR=FACTORY.getValidator(); }

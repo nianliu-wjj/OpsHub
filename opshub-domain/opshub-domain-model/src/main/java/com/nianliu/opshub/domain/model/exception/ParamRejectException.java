@@ -5,6 +5,8 @@ package com.nianliu.opshub.domain.model.exception;
  *
  * <p>由全局异常处理器映射为 HTTP 400 + fail(A0400) 信封 ——
  * 比 {@link OpsException} 的 HTTP 200 更具体的双轨口径（《工程实现复现手册》§9.3）。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 public class ParamRejectException extends OpsException {
 

@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import jakarta.validation.ConstraintViolationException;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 @ControllerAdvice @ResponseBody
 public class RootExceptionAdvice {
  @ExceptionHandler(ParamRejectException.class) @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -5,6 +5,10 @@ import org.springframework.util.StopWatch;
 import org.slf4j.*;
 import com.nianliu.opshub.common.validation.RequestValidator;
 import com.nianliu.opshub.domain.model.exception.*;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 @Component public class BizProcessTemplate {
  private static final Logger log=LoggerFactory.getLogger(BizProcessTemplate.class);
  private final DegradeGuard guard;

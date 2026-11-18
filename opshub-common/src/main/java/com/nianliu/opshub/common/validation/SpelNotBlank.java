@@ -12,6 +12,8 @@ import java.lang.annotation.Target;
  *
  * <p>{@code condition} 为空 = 无条件必填；非空 = 条件成立时才要求非空。
  * 触发通路与 {@link SpelAssert} 相同：模板第②步显式扫描执行。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

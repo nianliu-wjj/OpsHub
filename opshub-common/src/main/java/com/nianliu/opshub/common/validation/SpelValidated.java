@@ -19,6 +19,8 @@ import java.lang.annotation.Target;
  * （配 {@code @Valid} + {@link SpelValidatedValidator} 薄壳），与主通路共享同一执行内核。
  *
  * <p>对象级前置条件 {@code condition}：求值为 false 时整体放行（宽容度契约：null/异常视为不成立）。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

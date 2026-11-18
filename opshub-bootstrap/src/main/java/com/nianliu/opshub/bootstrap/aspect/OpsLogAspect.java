@@ -14,6 +14,10 @@ import com.alibaba.fastjson2.JSON;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.*;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 @Aspect @Component public class OpsLogAspect {
  private final IOpsLogService sink; private final IOperatorProvider operator; private final ApplicationContext beans;
  private final Map<String,Expression> cache=new ConcurrentHashMap<>(); private final SpelExpressionParser parser=new SpelExpressionParser();

@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
  * <p>扫描范围限定在基础设施层 DAL 的 DAO 接口包，避免误扫业务包。
  * Mapper XML 统一放在 {@code opshub-infra-dal/src/main/resources/sqlmap} 下，
  * 与 {@code mybatis-flex.mapper-locations} 配置保持一致。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 @Configuration
 @MapperScan(basePackages = "com.nianliu.opshub.infra.dal.daointerface")

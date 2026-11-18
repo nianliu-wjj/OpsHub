@@ -38,6 +38,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * <p><b>安全红线</b>（SpEL 注入治理）：禁止开启 SpEL 编译模式、禁止运行时拼接表达式串 ——
  * 全部表达式必须是编译期字面量，架构上不存在注入入口。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 public final class SpelConstraintEngine {
 

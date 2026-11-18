@@ -15,6 +15,8 @@ import org.springframework.context.annotation.ImportResource;
  * </ul>
  *
  * <p>主类刻意保持零业务逻辑，仅承担引导职责。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 @SpringBootApplication(scanBasePackages = "com.nianliu.opshub")
 @EnableConfigurationProperties

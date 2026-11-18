@@ -13,6 +13,8 @@ package com.nianliu.opshub.domain.model.exception;
  *
  * <p>子类分工：{@link ParamRejectException} 参数校验拒绝（映射 HTTP 400）、
  * {@link DuplicateKeyException} 唯一键冲突（模板幂等兜底触发器）。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 public class OpsException extends RuntimeException {
 

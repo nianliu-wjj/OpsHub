@@ -1,5 +1,9 @@
 package com.nianliu.opshub.common.validation;
 
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 public final class RequestValidator {
  private RequestValidator() {}
  public static void validate(Object request,String scene,Class<?>... groups) { BeanValidator.validate(request,scene,groups); SpelValidator.validate(request,scene,groups); }

@@ -3,6 +3,10 @@ package com.nianliu.opshub.common.validation;
 import jakarta.validation.*;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 public class SpelValidatedValidator implements ConstraintValidator<SpelValidated,Object> {
  private SpelValidated annotation;
  public void initialize(SpelValidated annotation) { this.annotation=annotation; }

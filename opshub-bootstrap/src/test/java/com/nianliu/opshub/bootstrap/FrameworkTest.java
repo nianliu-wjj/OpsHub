@@ -5,6 +5,10 @@ import com.nianliu.opshub.common.validation.*;
 import com.nianliu.opshub.common.opslog.*;
 import com.nianliu.opshub.biz.shared.template.*;
 import com.nianliu.opshub.domain.model.exception.*;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 class FrameworkTest {
  public static class Request {
   @jakarta.validation.constraints.Min(1) public int count=0;

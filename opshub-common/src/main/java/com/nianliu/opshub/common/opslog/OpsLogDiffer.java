@@ -1,6 +1,10 @@
 package com.nianliu.opshub.common.opslog;
 import com.alibaba.fastjson2.JSON;
 import java.util.*;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 public final class OpsLogDiffer {
  private OpsLogDiffer() {}
  public static List<FieldChange> diffFields(Object before,Object after) {

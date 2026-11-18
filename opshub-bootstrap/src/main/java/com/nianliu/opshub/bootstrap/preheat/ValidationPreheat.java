@@ -3,6 +3,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import com.nianliu.opshub.common.validation.RequestValidator;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 @Component public class ValidationPreheat implements InitializingBean {
  private final String classes; public ValidationPreheat(@Value("${opshub.validation.preheat.classes:}") String classes) { this.classes=classes; }
  public void afterPropertiesSet() { long start=System.nanoTime(); try { RequestValidator.warmup(); } catch(Exception e) { warn(e); }

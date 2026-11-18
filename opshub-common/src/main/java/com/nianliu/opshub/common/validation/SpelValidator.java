@@ -9,6 +9,8 @@ import java.util.List;
  *
  * <p>违规即抛 {@link ParamRejectException}（全局异常处理器映射 HTTP 400）；
  * {@link #warmup} 为启动预热转发入口（幂等）。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 public final class SpelValidator {
 

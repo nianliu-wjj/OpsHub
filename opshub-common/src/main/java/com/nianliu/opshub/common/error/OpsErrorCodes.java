@@ -8,6 +8,8 @@ package com.nianliu.opshub.common.error;
  *     <li>A 类：用户侧可感知，文案可直接展示；</li>
  *     <li>B 类：系统侧故障，对外统一兜底文案，明细仅服务端日志。</li>
  * </ul>
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 public final class OpsErrorCodes {
 

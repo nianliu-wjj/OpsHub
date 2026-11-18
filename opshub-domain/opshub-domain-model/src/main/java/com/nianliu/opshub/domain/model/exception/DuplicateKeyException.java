@@ -5,6 +5,8 @@ package com.nianliu.opshub.domain.model.exception;
  *
  * <p>模板 {@code doInProcess} 捕获本异常后回调 {@code onDuplicate}，
  * 命中幂等则返回既有结果，未处理则原样上抛走失败信封兜底。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 public class DuplicateKeyException extends OpsException {
 

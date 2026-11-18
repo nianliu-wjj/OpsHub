@@ -1,5 +1,8 @@
 package com.nianliu.opshub.api.base.result;
 
+import lombok.Data;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,9 +20,13 @@ import java.io.Serializable;
  * <p>实例化只允许经静态工厂，保证 code 与 success 的口径不被业务侧写歪。
  *
  * @param <T> 业务数据类型
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
+@Data
 public class Result<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 成功码：恒定值，对外语义稳定（§9.2 分级码对外稳定原则） */
@@ -71,37 +78,5 @@ public class Result<T> implements Serializable {
      */
     public static <T> Result<T> fail(String code, String msg) {
         return new Result<>(false, code, msg, null);
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
     }
 }

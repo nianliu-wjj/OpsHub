@@ -1,5 +1,9 @@
 package com.nianliu.opshub.common.opslog;
 import java.lang.annotation.*;
+/**
+ * @author nianliu-wjj
+ * @since 2026-11-18
+ */
 @Documented @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) @Repeatable(OpsLogs.class)
 public @interface OpsLog {
  String success(); String fail() default ""; String module() default ""; String type() default "";

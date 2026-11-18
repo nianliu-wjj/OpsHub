@@ -12,6 +12,8 @@ package com.nianliu.opshub.common.validation;
  * </ol>
  *
  * <p>业务自建组按域声明（如 {@code OrderValidationGroups.Reject}），组的语义对外稳定。
+ * @author nianliu-wjj
+ * @since 2026-11-18
  */
 public interface ValidationGroups {
 
