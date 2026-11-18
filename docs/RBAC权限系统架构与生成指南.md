@@ -23,16 +23,17 @@ erDiagram
 
 | 层 | 实现 |
 | --- | --- |
-| api | AccountRequest、RoleRequest、MenuRequest、AssignmentRequest、PageResult，原生字段校验 |
+| contract | AccountRequest、RoleRequest、MenuRequest、AssignmentRequest、PageResult，原生字段校验 |
+| api | RbacController 与认证 Controller，HTTP 参数绑定与统一响应 |
 | infra-dal | 生成的六组 Flex Entity/BaseMapper；独立 RbacRepository 维护参数化自定义 SQL |
 | infra-integration | RbacCache，StringRedisTemplate + Fastjson2，固定 TTL |
-| domain-service | RbacService，存在性校验、菜单循环校验、关联去重、事务及缓存版本 |
-| biz-impl | RbacController，七步模板、权限表达式、Result 信封、OpsLog |
+| domain-service | RbacService 业务接口 |
+| biz-impl | RbacServiceImpl 与内部 RbacOperations，七步模板、权限、OpsLog、事务与关联校验 |
 | bootstrap | 数据库 UserDetailsService、动态权限门面、认证日志监听器、冲突响应 |
 
 自定义查询集中在 RbacRepository，与生成目录隔离。当前复杂查询通过 JdbcTemplate 参数化执行，生成的 Flex Mapper 提供标准 CRUD 扩展入口；没有将现有查询换成依赖生成 TableDef 的 QueryWrapper。这样重新生成实体不会改变查询列、排序或关联条件。SQL 中表名和列名由代码白名单控制，值全部用 ? 绑定，分页限制 1~100，密码列只出现在内部认证查询，列表和详情不返回密码。
 
-所有写操作位于 RbacService 声明式事务中，授权关系采用“整组替换”。唯一冲突/数据约束冲突返回 HTTP 409 + A0409。权限管理写操作需要 ROLE_ADMIN 或 rbac:admin 权限；授予 rbac:admin 本身是高权限操作，普通 sys:role:mod 不足以修改授权。
+所有写操作位于 RbacOperations 声明式事务中，授权关系采用“整组替换”。唯一冲突/数据约束冲突返回 HTTP 409 + A0409。权限管理写操作需要 ROLE_ADMIN 或 rbac:admin 权限；授予 rbac:admin 本身是高权限操作，普通 sys:role:mod 不足以修改授权。
 
 ## 认证与授权
 
@@ -106,3 +107,5 @@ java opshub-infra/opshub-infra-dal/src/main/java/com/nianliu/opshub/infra/dal/ge
 详细的分类理由、保留期和恢复限制见《RBAC数据删除策略.md》。
 
 逻辑删除只通过主实体字段注解启用，移除全局 logic-delete-column 设置，避免对关联表和日志生成不存在的 is_deleted 查询条件。
+
+当前分层以《分层架构调整.md》为准：Service 为 domain-service 中的业务接口，其实现和事务组件位于 biz-impl。

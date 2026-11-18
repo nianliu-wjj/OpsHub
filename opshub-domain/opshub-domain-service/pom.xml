@@ -6,34 +6,18 @@
         <artifactId>opshub-domain</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
     <artifactId>opshub-domain-service</artifactId>
     <version>${domain.service.release.version}</version>
     <packaging>jar</packaging>
-
-    <dependencies><dependency><groupId>com.alibaba.fastjson2</groupId><artifactId>fastjson2</artifactId></dependency>
-<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-api</artifactId></dependency>
-<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-common</artifactId></dependency>
-<dependency><groupId>org.springframework</groupId><artifactId>spring-context</artifactId></dependency>
-<dependency><groupId>org.springframework</groupId><artifactId>spring-tx</artifactId></dependency>
-
+    <!-- 业务接口模块：只依赖共享数据契约与领域模型，不引用实现或基础设施。 -->
+    <dependencies>
+        <dependency>
+            <groupId>com.nianliu.opshub</groupId>
+            <artifactId>opshub-contract</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.nianliu.opshub</groupId>
             <artifactId>opshub-domain-model</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nianliu.opshub</groupId>
-            <artifactId>opshub-infra-dal</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.nianliu.opshub</groupId>
-            <artifactId>opshub-infra-integration</artifactId>
-        </dependency>
-
-        <!-- 编译期样板代码消除 -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 </project>

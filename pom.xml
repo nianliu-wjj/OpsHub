@@ -11,6 +11,7 @@
     <description>按《Java 后端编码规范》五层模块群组织的多模块工程（启动装配 / 接口契约 / 接口实现 / 领域 / 基础设施）</description>
 
     <modules>
+        <module>opshub-contract</module>
         <module>opshub-api</module>
         <module>opshub-biz</module>
         <module>opshub-bootstrap</module>
@@ -28,6 +29,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- 各模块独立发布版本号，不随工程快照波动（编码规范 §2.4 规则 3） -->
+        <contract.release.version>1.0.0</contract.release.version>
         <api.release.version>1.0.0</api.release.version>
         <common.release.version>1.0.0</common.release.version>
         <domain.model.release.version>1.0.0</domain.model.release.version>
@@ -53,6 +55,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-contract</artifactId><version>${contract.release.version}</version></dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

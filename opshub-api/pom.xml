@@ -1,21 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.nianliu.opshub</groupId>
-        <artifactId>OpsHub</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>opshub-api</artifactId>
-    <version>${api.release.version}</version>
-    <packaging>jar</packaging>
-
-    <!-- 接口契约层：零内部依赖（不引任何 opshub 模块），仅允许编译期样板消除，保持契约纯净可独立发布 -->
-    <dependencies><dependency><groupId>jakarta.validation</groupId><artifactId>jakarta.validation-api</artifactId></dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+    <parent><groupId>com.nianliu.opshub</groupId><artifactId>OpsHub</artifactId><version>1.0-SNAPSHOT</version></parent>
+    <artifactId>opshub-api</artifactId><version>${api.release.version}</version>
+    <dependencies><dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-web</artifactId></dependency>
+        <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-contract</artifactId></dependency>
+        <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-service</artifactId></dependency>
+        <dependency><groupId>org.springframework</groupId><artifactId>spring-web</artifactId></dependency>
+        <dependency><groupId>jakarta.validation</groupId><artifactId>jakarta.validation-api</artifactId></dependency>
+        <dependency><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId></dependency>
     </dependencies>
 </project>

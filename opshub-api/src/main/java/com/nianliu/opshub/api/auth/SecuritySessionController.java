@@ -1,4 +1,4 @@
-package com.nianliu.opshub.bootstrap.config;
+package com.nianliu.opshub.api.auth;
 
 import com.nianliu.opshub.api.base.result.Result;
 import org.springframework.security.web.csrf.CsrfToken;

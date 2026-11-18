@@ -11,7 +11,9 @@
     <version>${bootstrap.release.version}</version>
     <packaging>jar</packaging>
 
-    <dependencies><dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-infra-integration</artifactId></dependency><dependency><groupId>org.springframework</groupId><artifactId>spring-jdbc</artifactId></dependency><dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><scope>test</scope></dependency>
+    <dependencies>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-api</artifactId></dependency>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-infra-integration</artifactId></dependency><dependency><groupId>org.springframework</groupId><artifactId>spring-jdbc</artifactId></dependency><dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><scope>test</scope></dependency>
 <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-service</artifactId></dependency>
 <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-infra-dal</artifactId></dependency>
 
@@ -29,7 +31,7 @@
             <scope>test</scope>
         </dependency>
 <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-common</artifactId></dependency>
-<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-api</artifactId></dependency>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-contract</artifactId></dependency>
 <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-model</artifactId></dependency>
 <dependency><groupId>com.alibaba.fastjson2</groupId><artifactId>fastjson2-extension-spring6</artifactId><version>${fastjson2.version}</version></dependency>
 

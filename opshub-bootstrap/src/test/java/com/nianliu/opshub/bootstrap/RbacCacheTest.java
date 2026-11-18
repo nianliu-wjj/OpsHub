@@ -2,7 +2,7 @@ package com.nianliu.opshub.bootstrap;
 
 import com.nianliu.opshub.infra.integration.cache.RbacCache;
 import com.nianliu.opshub.infra.dal.repository.rbac.RbacRepository;
-import com.nianliu.opshub.domain.service.rbac.RbacService;
+import com.nianliu.opshub.biz.impl.rbac.RbacOperations;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -27,7 +27,7 @@ class RbacCacheTest {
         RbacRepository repository=mock(RbacRepository.class);
         when(repository.version()).thenReturn(1L,2L);
         when(repository.authorities(7L)).thenReturn(List.of());
-        RbacService service=new RbacService(repository,new RbacCache(redis));
+        RbacOperations service=new RbacOperations(repository,new RbacCache(redis));
         assertEquals(List.of("sys:account"),service.authorities(7L));
         assertTrue(service.authorities(7L).isEmpty());
         verify(operations).get("opshub:rbac:2:authorities:7");
@@ -46,7 +46,7 @@ class RbacCacheTest {
         RbacRepository repository=mock(RbacRepository.class);
         when(repository.get("accounts",7L)).thenReturn(java.util.Map.of("id",7L,"version",0L));
         when(repository.get("roles",999L)).thenReturn(null);
-        RbacService service=new RbacService(repository,mock(RbacCache.class));
+        RbacOperations service=new RbacOperations(repository,mock(RbacCache.class));
         assertThrows(com.nianliu.opshub.domain.model.exception.OpsException.class,
                 ()->service.assign("accounts",7L,List.of(999L),0L));
         verify(repository).lockGraph();

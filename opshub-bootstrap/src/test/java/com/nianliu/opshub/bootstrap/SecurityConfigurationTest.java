@@ -1,7 +1,7 @@
 package com.nianliu.opshub.bootstrap;
 
 import com.nianliu.opshub.bootstrap.config.SecurityConfiguration;
-import com.nianliu.opshub.bootstrap.config.SecuritySessionController;
+import com.nianliu.opshub.api.auth.SecuritySessionController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

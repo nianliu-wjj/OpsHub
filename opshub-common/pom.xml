@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.nianliu.opshub</groupId>
-            <artifactId>opshub-api</artifactId>
+            <artifactId>opshub-contract</artifactId>
         </dependency>
 
         <!-- ==================== 三方依赖：横切能力（日志门面 / 工具 / 序列化）唯一定义点 ==================== -->

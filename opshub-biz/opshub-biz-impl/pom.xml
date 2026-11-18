@@ -12,7 +12,12 @@
     <packaging>jar</packaging>
 
 
-    <dependencies><dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-crypto</artifactId></dependency>
+    <dependencies>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-infra-dal</artifactId></dependency>
+<dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-infra-integration</artifactId></dependency>
+<dependency><groupId>org.springframework</groupId><artifactId>spring-tx</artifactId></dependency>
+<dependency><groupId>com.alibaba.fastjson2</groupId><artifactId>fastjson2</artifactId></dependency>
+<dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-crypto</artifactId></dependency>
 <dependency><groupId>org.springframework</groupId><artifactId>spring-context</artifactId></dependency>
 <dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-core</artifactId></dependency>
 <dependency><groupId>jakarta.validation</groupId><artifactId>jakarta.validation-api</artifactId></dependency>
@@ -23,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>com.nianliu.opshub</groupId>
-            <artifactId>opshub-api</artifactId>
+            <artifactId>opshub-contract</artifactId>
         </dependency>
         <dependency>
             <groupId>com.nianliu.opshub</groupId>

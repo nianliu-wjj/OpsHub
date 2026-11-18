@@ -1,6 +1,7 @@
 package com.nianliu.opshub.bootstrap;
 
 import com.nianliu.opshub.bootstrap.config.*;
+import com.nianliu.opshub.api.auth.SecuritySessionController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -33,7 +34,7 @@ class OpenApiConfigurationTest {
     @Autowired
     private MockMvc mvc;
     @org.springframework.test.context.bean.override.mockito.MockitoBean
-    private com.nianliu.opshub.domain.service.rbac.RbacService rbacService;
+    private com.nianliu.opshub.biz.impl.rbac.RbacOperations rbacService;
 
     @DynamicPropertySource
     static void credentials(DynamicPropertyRegistry registry) {
@@ -91,6 +92,18 @@ class OpenApiConfigurationTest {
                 .andExpect(status().isConflict());
     }
 
+    @Test
+    void serviceImplementationRejectsUnauthorizedAccountWrites() throws Exception {
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/rbac/accounts")
+                .with(user("reader").roles("USER"))
+                .with(org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf())
+                .contentType("application/json")
+                .content("{\"username\":\"operator\",\"password\":\"change-me-123\",\"enable\":1,\"locked\":0}"))
+                .andExpect(status().isForbidden());
+        org.mockito.Mockito.verify(rbacService,org.mockito.Mockito.never()).saveAccount(
+                org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.any(),org.mockito.ArgumentMatchers.anyString());
+    }
+
     /**
      * @author nianliu-wjj
      * @since 2026-11-18
@@ -99,7 +112,7 @@ class OpenApiConfigurationTest {
     @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
     @Import({OpenApiConfiguration.class, SecurityConfiguration.class, SecuritySessionController.class,
             FastJsonConverterConfig.class, RootExceptionAdvice.class, RbacExceptionAdvice.class,
-            com.nianliu.opshub.biz.impl.rbac.RbacController.class, RbacPermission.class,
+            com.nianliu.opshub.api.rbac.RbacController.class, com.nianliu.opshub.biz.impl.rbac.RbacServiceImpl.class, RbacPermission.class,
             com.nianliu.opshub.biz.shared.template.BizProcessTemplate.class,
             com.nianliu.opshub.biz.shared.template.DegradeGuard.class})
     static class TestConfiguration {
