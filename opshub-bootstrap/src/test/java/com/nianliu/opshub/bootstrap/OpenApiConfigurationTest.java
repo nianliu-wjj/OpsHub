@@ -112,7 +112,7 @@ class OpenApiConfigurationTest {
     @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
     @Import({OpenApiConfiguration.class, SecurityConfiguration.class, SecuritySessionController.class,
             FastJsonConverterConfig.class, RootExceptionAdvice.class, RbacExceptionAdvice.class,
-            com.nianliu.opshub.api.rbac.RbacController.class, com.nianliu.opshub.biz.impl.rbac.RbacServiceImpl.class, RbacPermission.class,
+            com.nianliu.opshub.api.rbac.RbacController.class, com.nianliu.opshub.api.rbac.UserController.class, com.nianliu.opshub.api.rbac.RoleController.class, com.nianliu.opshub.api.rbac.PermissionController.class, com.nianliu.opshub.biz.impl.rbac.UserServiceImpl.class, com.nianliu.opshub.biz.impl.rbac.RoleServiceImpl.class, com.nianliu.opshub.biz.impl.rbac.PermissionServiceImpl.class, com.nianliu.opshub.biz.shared.template.BizProcessExecutor.class, com.nianliu.opshub.biz.impl.rbac.RbacServiceImpl.class, RbacPermission.class,
             com.nianliu.opshub.biz.shared.template.BizProcessTemplate.class,
             com.nianliu.opshub.biz.shared.template.DegradeGuard.class})
     static class TestConfiguration {
