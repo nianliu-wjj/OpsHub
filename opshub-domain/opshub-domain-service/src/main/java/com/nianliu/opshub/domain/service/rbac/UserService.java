@@ -1,6 +1,7 @@
 package com.nianliu.opshub.domain.service.rbac;
 
 import com.nianliu.opshub.api.rbac.*;
+import com.nianliu.opshub.domain.model.rbac.*;
 
 import java.util.*;
 
@@ -9,9 +10,9 @@ import java.util.*;
  * @since 2026-11-20
  */
 public interface UserService {
-    PageResult<Map<String, Object>> accountList(int page, int size, String keyword);
+    PageResult<User> accountList(int page, int size, String keyword);
 
-    Map<String, Object> accountGet(long id);
+    User accountGet(long id);
 
     Long accountCreate(AccountRequest request);
 

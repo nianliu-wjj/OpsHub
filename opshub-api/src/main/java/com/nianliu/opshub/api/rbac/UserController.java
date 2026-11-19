@@ -1,6 +1,7 @@
 package com.nianliu.opshub.api.rbac;
 
 import com.nianliu.opshub.api.base.result.Result;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.domain.service.rbac.UserService;
 
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class UserController {
     private final UserService service;
 
     @GetMapping("/accounts")
-    public Result<PageResult<Map<String, Object>>> accountList(
+    public Result<PageResult<User>> accountList(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "") String keyword) {
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/accounts/{id}")
-    public Result<Map<String, Object>> accountGet(@PathVariable long id) {
+    public Result<User> accountGet(@PathVariable long id) {
         return Result.ok(service.accountGet(id));
     }
 

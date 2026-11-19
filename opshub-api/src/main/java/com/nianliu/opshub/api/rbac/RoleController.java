@@ -1,6 +1,7 @@
 package com.nianliu.opshub.api.rbac;
 
 import com.nianliu.opshub.api.base.result.Result;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.domain.service.rbac.RoleService;
 
 import jakarta.validation.Valid;
@@ -22,7 +23,7 @@ public class RoleController {
     private final RoleService service;
 
     @GetMapping("/roles")
-    public Result<PageResult<Map<String, Object>>> roleList(
+    public Result<PageResult<Role>> roleList(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "") String keyword) {
@@ -30,7 +31,7 @@ public class RoleController {
     }
 
     @GetMapping("/roles/{id}")
-    public Result<Map<String, Object>> roleGet(@PathVariable long id) {
+    public Result<Role> roleGet(@PathVariable long id) {
         return Result.ok(service.roleGet(id));
     }
 

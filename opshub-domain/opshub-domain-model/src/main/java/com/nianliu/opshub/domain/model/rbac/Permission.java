@@ -21,4 +21,8 @@ public class Permission {
     private Integer hidden;
     private Long version;
     private Integer isDeleted;
+    private String icon;
+    private String redirect;
+    private String description;
+    private java.time.LocalDateTime createTime;
 }

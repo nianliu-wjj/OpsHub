@@ -1,11 +1,11 @@
 package com.nianliu.opshub.infra.dal.dao.rbac;
 
-import com.nianliu.opshub.infra.dal.daointerface.rbac.RbacSqlMapper;
+import com.nianliu.opshub.domain.model.rbac.*;
+import com.nianliu.opshub.infra.dal.daointerface.rbac.*;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import java.util.*;
 
@@ -18,21 +18,17 @@ import java.util.*;
 public class MybatisSqlExecutor {
     private final RbacSqlMapper mapper;
 
-    public List<Map<String, Object>> queryForList(String sql, Object... args) {
-        return mapper.select(sql, args).stream()
-                .map(
-                        row -> {
-                            Map<String, Object> normalized = new LinkedCaseInsensitiveMap<>();
-                            normalized.putAll(row);
-                            return normalized;
-                        })
-                .toList();
-    }
-
     public <T> List<T> queryForList(String sql, Class<T> type, Object... args) {
-        return mapper.select(sql, args).stream()
-                .map(row -> convert(row.values().iterator().next(), type))
-                .toList();
+        List<?> rows;
+        if (type == User.class) rows = mapper.selectUsers(sql, args);
+        else if (type == Role.class) rows = mapper.selectRoles(sql, args);
+        else if (type == Permission.class) rows = mapper.selectPermissions(sql, args);
+        else if (type == UserCredential.class) rows = mapper.selectCredentials(sql, args);
+        else if (type == LoginLog.class) rows = mapper.selectLogs(sql, args);
+        else if (type == Long.class) rows = mapper.selectLongs(sql, args);
+        else if (type == String.class) rows = mapper.selectStrings(sql, args);
+        else throw new IllegalArgumentException("不支持的查询实体类型");
+        return rows.stream().map(type::cast).toList();
     }
 
     public <T> T queryForObject(String sql, Class<T> type, Object... args) {
@@ -41,19 +37,13 @@ public class MybatisSqlExecutor {
         return values.getFirst();
     }
 
-    private <T> T convert(Object value, Class<T> type) {
-        if (type == Long.class && value instanceof Number number)
-            return type.cast(number.longValue());
-        return type.cast(value);
-    }
-
     public int update(String sql, Object... args) {
         return mapper.execute(sql, args);
     }
 
     public long insert(String sql, Object... args) {
-        Map<String, Object> row = new HashMap<>();
+        var row = new GeneratedKey();
         mapper.insert(sql, args, row);
-        return ((Number) Objects.requireNonNull(row.get("id"))).longValue();
+        return Objects.requireNonNull(row.getId());
     }
 }

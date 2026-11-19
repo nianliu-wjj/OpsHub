@@ -2,6 +2,7 @@ package com.nianliu.opshub.biz.impl.rbac;
 
 import com.nianliu.opshub.api.rbac.*;
 import com.nianliu.opshub.domain.model.exception.*;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.infra.dal.repository.rbac.RbacRepository;
 import com.nianliu.opshub.infra.integration.cache.RbacCache;
 
@@ -21,18 +22,18 @@ public class RbacOperations {
     private final RbacRepository repository;
     private final RbacCache cache;
 
-    public PageResult<Map<String, Object>> page(
-            String resource, int page, int size, String keyword) {
-        return repository.page(resource, page, size, keyword);
+    public <T> PageResult<T> page(
+            String resource, Class<T> type, int page, int size, String keyword) {
+        return repository.page(resource, type, page, size, keyword);
     }
 
-    public Map<String, Object> get(String resource, long id) {
-        var result = repository.get(resource, id);
+    public <T> T get(String resource, Class<T> type, long id) {
+        var result = repository.get(resource, type, id);
         if (result == null) throw OpsException.rejected("A0404", "资源不存在");
         return result;
     }
 
-    public Map<String, Object> credentials(String username) {
+    public UserCredential credentials(String username) {
         return repository.credentials(username);
     }
 
@@ -46,7 +47,7 @@ public class RbacOperations {
         return com.alibaba.fastjson2.JSON.parseArray(json, String.class);
     }
 
-    public List<Map<String, Object>> menus(long id) {
+    public List<Permission> menus(long id) {
         long version = repository.version();
         String json =
                 cache.get(
@@ -54,7 +55,7 @@ public class RbacOperations {
                         String.class,
                         () -> com.alibaba.fastjson2.JSON.toJSONString(repository.grantedMenus(id)));
         return com.alibaba.fastjson2.JSON.parseObject(
-                json, new com.alibaba.fastjson2.TypeReference<List<Map<String, Object>>>() {});
+                json, new com.alibaba.fastjson2.TypeReference<List<Permission>>() {});
     }
 
     public List<Long> assignments(String resource, long id) {
@@ -98,7 +99,7 @@ public class RbacOperations {
             while (current != 0) {
                 if (Objects.equals(id, current) || !visited.add(current))
                     throw new ParamRejectException("菜单不能形成循环");
-                current = ((Number) get("menus", current).get("parentId")).longValue();
+                current = get("menus", Permission.class, current).getParentId();
             }
         }
         var v = new LinkedHashMap<String, Object>();
@@ -157,5 +158,14 @@ public class RbacOperations {
     private long requiredVersion(Long version) {
         if (version == null || version < 0) throw new ParamRejectException("修改或授权替换必须提供当前version");
         return version;
+    }
+
+    private Object get(String resource, long id) {
+        return switch (resource) {
+            case "accounts" -> get(resource, User.class, id);
+            case "roles" -> get(resource, Role.class, id);
+            case "menus" -> get(resource, Permission.class, id);
+            default -> throw new IllegalArgumentException("非法资源");
+        };
     }
 }

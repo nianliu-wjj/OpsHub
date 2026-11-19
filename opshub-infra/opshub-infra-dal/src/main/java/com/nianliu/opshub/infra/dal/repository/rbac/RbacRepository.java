@@ -1,6 +1,7 @@
 package com.nianliu.opshub.infra.dal.repository.rbac;
 
 import com.nianliu.opshub.api.rbac.PageResult;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.infra.dal.dao.rbac.RbacDao;
 
 import lombok.RequiredArgsConstructor;
@@ -20,16 +21,16 @@ import java.util.*;
 public class RbacRepository {
     private final RbacDao dao;
 
-    public PageResult<Map<String, Object>> page(
-            String resource, int page, int size, String keyword) {
-        return dao.page(resource, page, size, keyword);
+    public <T> PageResult<T> page(
+            String resource, Class<T> type, int page, int size, String keyword) {
+        return dao.page(resource, type, page, size, keyword);
     }
 
-    public Map<String, Object> get(String resource, long id) {
-        return dao.get(resource, id);
+    public <T> T get(String resource, Class<T> type, long id) {
+        return dao.get(resource, type, id);
     }
 
-    public Map<String, Object> credentials(String username) {
+    public UserCredential credentials(String username) {
         return dao.credentials(username);
     }
 
@@ -45,7 +46,7 @@ public class RbacRepository {
         return dao.authorities(id);
     }
 
-    public List<Map<String, Object>> grantedMenus(long id) {
+    public List<Permission> grantedMenus(long id) {
         return dao.grantedMenus(id);
     }
 

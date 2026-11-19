@@ -3,6 +3,7 @@ package com.nianliu.opshub.biz.impl.rbac;
 import com.nianliu.opshub.api.rbac.*;
 import com.nianliu.opshub.biz.shared.template.BizProcessExecutor;
 import com.nianliu.opshub.common.opslog.OpsLog;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.domain.service.rbac.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nianliu-wjj
@@ -29,17 +29,20 @@ public class UserServiceImpl implements UserService {
 
     @PreAuthorize("@rbacPermission.allowed(authentication, 'sys:account')")
     @Override
-    public PageResult<Map<String, Object>> accountList(int page, int size, String keyword) {
+    public PageResult<User> accountList(int page, int size, String keyword) {
         if (page < 1 || size < 1 || size > 100 || keyword.length() > 100)
             throw new com.nianliu.opshub.domain.model.exception.ParamRejectException("分页参数非法");
         return executor.run(
-                "RBAC_ACCOUNTS_QUERY", 1L, () -> operations.page("accounts", page, size, keyword));
+                "RBAC_ACCOUNTS_QUERY",
+                1L,
+                () -> operations.page("accounts", User.class, page, size, keyword));
     }
 
     @PreAuthorize("@rbacPermission.allowed(authentication, 'sys:account')")
     @Override
-    public Map<String, Object> accountGet(long id) {
-        return executor.run("RBAC_ACCOUNTS_QUERY", 1L, () -> operations.get("accounts", id));
+    public User accountGet(long id) {
+        return executor.run(
+                "RBAC_ACCOUNTS_QUERY", 1L, () -> operations.get("accounts", User.class, id));
     }
 
     @PreAuthorize("@rbacPermission.allowed(authentication, 'rbac:admin')")

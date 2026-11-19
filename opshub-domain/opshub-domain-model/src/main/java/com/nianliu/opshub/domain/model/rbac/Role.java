@@ -18,4 +18,5 @@ public class Role {
     private Integer sort;
     private Long version;
     private Integer isDeleted;
+    private java.time.LocalDateTime createTime;
 }

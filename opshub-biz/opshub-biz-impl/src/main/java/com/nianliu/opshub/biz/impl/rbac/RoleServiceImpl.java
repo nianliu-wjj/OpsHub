@@ -3,6 +3,7 @@ package com.nianliu.opshub.biz.impl.rbac;
 import com.nianliu.opshub.api.rbac.*;
 import com.nianliu.opshub.biz.shared.template.BizProcessExecutor;
 import com.nianliu.opshub.common.opslog.OpsLog;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.domain.service.rbac.RoleService;
 
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nianliu-wjj
@@ -24,17 +24,19 @@ public class RoleServiceImpl implements RoleService {
 
     @PreAuthorize("@rbacPermission.allowed(authentication, 'sys:role')")
     @Override
-    public PageResult<Map<String, Object>> roleList(int page, int size, String keyword) {
+    public PageResult<Role> roleList(int page, int size, String keyword) {
         if (page < 1 || size < 1 || size > 100 || keyword.length() > 100)
             throw new com.nianliu.opshub.domain.model.exception.ParamRejectException("分页参数非法");
         return executor.run(
-                "RBAC_ROLES_QUERY", 1L, () -> operations.page("roles", page, size, keyword));
+                "RBAC_ROLES_QUERY",
+                1L,
+                () -> operations.page("roles", Role.class, page, size, keyword));
     }
 
     @PreAuthorize("@rbacPermission.allowed(authentication, 'sys:role')")
     @Override
-    public Map<String, Object> roleGet(long id) {
-        return executor.run("RBAC_ROLES_QUERY", 1L, () -> operations.get("roles", id));
+    public Role roleGet(long id) {
+        return executor.run("RBAC_ROLES_QUERY", 1L, () -> operations.get("roles", Role.class, id));
     }
 
     @PreAuthorize("@rbacPermission.allowed(authentication, 'rbac:admin')")

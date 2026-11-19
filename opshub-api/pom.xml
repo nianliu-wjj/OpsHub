@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent><groupId>com.nianliu.opshub</groupId><artifactId>OpsHub</artifactId><version>1.0-SNAPSHOT</version></parent>
     <artifactId>opshub-api</artifactId><version>${api.release.version}</version>
-    <dependencies><dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-web</artifactId></dependency>
+    <dependencies><dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-model</artifactId></dependency><dependency><groupId>org.springframework.security</groupId><artifactId>spring-security-web</artifactId></dependency>
         <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-contract</artifactId></dependency>
         <dependency><groupId>com.nianliu.opshub</groupId><artifactId>opshub-domain-service</artifactId></dependency>
         <dependency><groupId>org.springframework</groupId><artifactId>spring-web</artifactId></dependency>

@@ -2,6 +2,7 @@ package com.nianliu.opshub.biz.impl.rbac;
 
 import com.nianliu.opshub.api.rbac.*;
 import com.nianliu.opshub.biz.shared.template.BizProcessExecutor;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.domain.service.rbac.RbacService;
 
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nianliu-wjj
@@ -30,13 +30,13 @@ public class RbacServiceImpl implements RbacService {
 
     @PreAuthorize("@rbacPermission.allowed(authentication, 'sys:logging:login')")
     @Override
-    public PageResult<Map<String, Object>> loginLogs(int page, int size, String keyword) {
+    public PageResult<LoginLog> loginLogs(int page, int size, String keyword) {
         if (page < 1 || size < 1 || size > 100 || keyword.length() > 100)
             throw new com.nianliu.opshub.domain.model.exception.ParamRejectException("分页参数非法");
         return executor.run(
                 "RBAC_LOGIN_LOG_QUERY",
                 1L,
-                () -> operations.page("login-logs", page, size, keyword));
+                () -> operations.page("login-logs", LoginLog.class, page, size, keyword));
     }
 
     @PreAuthorize("@rbacPermission.allowed(authentication, '__authenticated')")
@@ -47,26 +47,21 @@ public class RbacServiceImpl implements RbacService {
         if (account == null)
             throw new org.springframework.security.access.AccessDeniedException("账号不存在");
         return executor.run(
-                "RBAC_CURRENT_PERMISSIONS",
-                1L,
-                () -> operations.authorities(((Number) account.get("id")).longValue()));
+                "RBAC_CURRENT_PERMISSIONS", 1L, () -> operations.authorities(account.getId()));
     }
 
     @PreAuthorize("@rbacPermission.allowed(authentication, '__authenticated')")
     @Override
-    public List<Map<String, Object>> currentMenus(String username) {
+    public List<Permission> currentMenus(String username) {
         var account = operations.credentials(username);
         if (account == null && bootstrapUsername.equals(username)) return List.of();
         if (account == null)
             throw new org.springframework.security.access.AccessDeniedException("账号不存在");
-        return executor.run(
-                "RBAC_CURRENT_MENUS",
-                1L,
-                () -> operations.menus(((Number) account.get("id")).longValue()));
+        return executor.run("RBAC_CURRENT_MENUS", 1L, () -> operations.menus(account.getId()));
     }
 
     @Override
-    public Map<String, Object> credentials(String username) {
+    public UserCredential credentials(String username) {
         return operations.credentials(username);
     }
 
@@ -76,7 +71,7 @@ public class RbacServiceImpl implements RbacService {
     }
 
     @Override
-    public List<Map<String, Object>> menus(long id) {
+    public List<Permission> menus(long id) {
         return operations.menus(id);
     }
 }

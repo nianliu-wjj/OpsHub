@@ -1,6 +1,7 @@
 package com.nianliu.opshub.api.rbac;
 
 import com.nianliu.opshub.api.base.result.Result;
+import com.nianliu.opshub.domain.model.rbac.*;
 import com.nianliu.opshub.domain.service.rbac.RbacService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class RbacController {
     private final RbacService service;
 
     @GetMapping("/login-logs")
-    public Result<PageResult<Map<String, Object>>> loginLogs(
+    public Result<PageResult<LoginLog>> loginLogs(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "") String keyword) {
@@ -35,7 +36,7 @@ public class RbacController {
     }
 
     @GetMapping("/me/menus")
-    public Result<List<Map<String, Object>>> currentMenus(java.security.Principal principal) {
+    public Result<List<Permission>> currentMenus(java.security.Principal principal) {
         return Result.ok(service.currentMenus(principal.getName()));
     }
 }

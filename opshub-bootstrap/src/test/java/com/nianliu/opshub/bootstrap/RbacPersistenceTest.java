@@ -2,6 +2,7 @@ package com.nianliu.opshub.bootstrap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.nianliu.opshub.domain.model.rbac.User;
 import com.nianliu.opshub.infra.dal.generator.RbacCodeGenerator;
 import com.nianliu.opshub.infra.dal.repository.rbac.RbacRepository;
 
@@ -40,7 +41,7 @@ class RbacPersistenceTest {
                     + " 0,is_deleted int default 0)");
         jdbc.execute(
                 "CREATE TABLE sys_account_role(id bigint auto_increment primary key,account_id"
-                    + " bigint,role_id bigint,unique(account_id,role_id))");
+                        + " bigint,role_id bigint,unique(account_id,role_id))");
         jdbc.execute("CREATE TABLE sys_rbac_version(id bigint primary key,version bigint)");
         jdbc.update("INSERT INTO sys_rbac_version VALUES(1,1)");
         var configuration =
@@ -73,29 +74,27 @@ class RbacPersistenceTest {
                                         1,
                                         "`lock`",
                                         0)));
-        assertEquals(1, repository.page("accounts", 1, 20, "alice").total());
-        assertEquals(0, repository.page("accounts", 1, 20, "' OR 1=1 --").total());
+        assertEquals(1, repository.page("accounts", User.class, 1, 20, "alice").total());
+        assertEquals(0, repository.page("accounts", User.class, 1, 20, "' OR 1=1 --").total());
+        assertEquals("alice", repository.get("accounts", User.class, id).getUsername());
+        assertEquals("hash", repository.credentials("alice").getPassword());
         assertFalse(
-                repository.get("accounts", id).keySet().stream()
-                        .anyMatch(k -> k.equalsIgnoreCase("password")));
-        assertEquals(
-                "hash",
-                repository.credentials("alice").entrySet().stream()
-                        .filter(e -> e.getKey().equalsIgnoreCase("password"))
-                        .findFirst()
-                        .orElseThrow()
-                        .getValue());
+                com.alibaba
+                        .fastjson2
+                        .JSON
+                        .toJSONString(repository.get("accounts", User.class, id))
+                        .contains("password"));
         repository.replaceAssignments("accounts", id, List.of(1L, 1L, 2L));
         assertEquals(2, repository.assignments("accounts", id).size());
         repository.changed();
         assertEquals(2, repository.version());
         jdbc.execute(
                 "CREATE TABLE sys_role(id bigint primary key,code varchar,status int,version bigint"
-                    + " default 0,is_deleted int default 0)");
+                        + " default 0,is_deleted int default 0)");
         jdbc.execute(
                 "CREATE TABLE sys_menu(id bigint primary key,parent_id bigint,name varchar,code"
-                    + " varchar,url varchar,type int,sort int,hidden int,version bigint default"
-                    + " 0,is_deleted int default 0)");
+                        + " varchar,url varchar,type int,sort int,hidden int,version bigint default"
+                        + " 0,is_deleted int default 0)");
         jdbc.execute("CREATE TABLE sys_role_menu(role_id bigint,menu_id bigint)");
         jdbc.update("INSERT INTO sys_role(id,code,status) VALUES(1,'reader',1),(2,'disabled',0)");
         jdbc.update(
@@ -117,7 +116,7 @@ class RbacPersistenceTest {
                                 new LinkedHashMap<>(Map.of("email", "stale@example.com"))));
         repository.delete("accounts", id, 1);
         assertNull(repository.credentials("alice"));
-        assertEquals(0, repository.page("accounts", 1, 20, "").total());
+        assertEquals(0, repository.page("accounts", User.class, 1, 20, "").total());
         assertTrue(repository.assignments("accounts", id).isEmpty());
     }
 

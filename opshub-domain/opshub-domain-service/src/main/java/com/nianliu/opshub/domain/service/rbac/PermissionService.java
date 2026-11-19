@@ -1,6 +1,7 @@
 package com.nianliu.opshub.domain.service.rbac;
 
 import com.nianliu.opshub.api.rbac.*;
+import com.nianliu.opshub.domain.model.rbac.*;
 
 import java.util.*;
 
@@ -9,9 +10,9 @@ import java.util.*;
  * @since 2026-11-20
  */
 public interface PermissionService {
-    PageResult<Map<String, Object>> menuList(int page, int size, String keyword);
+    PageResult<Permission> menuList(int page, int size, String keyword);
 
-    Map<String, Object> menuGet(long id);
+    Permission menuGet(long id);
 
     Long menuCreate(MenuRequest request);
 

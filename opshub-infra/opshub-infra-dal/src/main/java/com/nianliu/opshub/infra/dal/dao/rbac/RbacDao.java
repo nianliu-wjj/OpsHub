@@ -1,6 +1,7 @@
 package com.nianliu.opshub.infra.dal.dao.rbac;
 
 import com.nianliu.opshub.api.rbac.PageResult;
+import com.nianliu.opshub.domain.model.rbac.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,8 +44,8 @@ public class RbacDao {
                             "id,created_time AS createdTime,account,ip,user_agent AS"
                                     + " userAgent,status,reason");
 
-    public PageResult<Map<String, Object>> page(
-            String resource, int page, int size, String keyword) {
+    public <T> PageResult<T> page(
+            String resource, Class<T> type, int page, int size, String keyword) {
         String table = TABLES.get(resource);
         if (table == null) throw new IllegalArgumentException("非法资源");
         String field =
@@ -68,13 +69,14 @@ public class RbacDao {
                                 + table
                                 + where
                                 + " ORDER BY id DESC LIMIT ? OFFSET ?",
+                        type,
                         term,
                         size,
                         (long) (page - 1) * size);
         return new PageResult<>(total == null ? 0 : total, page, size, rows);
     }
 
-    public Map<String, Object> get(String resource, long id) {
+    public <T> T get(String resource, Class<T> type, long id) {
         var rows =
                 sqlExecutor.queryForList(
                         "SELECT "
@@ -84,15 +86,17 @@ public class RbacDao {
                                 + " WHERE "
                                 + (resource.equals("login-logs") ? "" : "is_deleted=0 AND ")
                                 + "id=?",
+                        type,
                         id);
         return rows.isEmpty() ? null : rows.getFirst();
     }
 
-    public Map<String, Object> credentials(String username) {
+    public UserCredential credentials(String username) {
         var rows =
                 sqlExecutor.queryForList(
                         "SELECT id,username,password,enable,`lock` AS locked FROM sys_account WHERE"
                                 + " is_deleted=0 AND username=?",
+                        UserCredential.class,
                         username);
         return rows.isEmpty() ? null : rows.getFirst();
     }
@@ -129,13 +133,14 @@ public class RbacDao {
         return result;
     }
 
-    public List<Map<String, Object>> grantedMenus(long id) {
+    public List<Permission> grantedMenus(long id) {
         return sqlExecutor.queryForList(
                 "SELECT DISTINCT m.id,m.parent_id AS"
                     + " parentId,m.name,m.code,m.url,m.type,m.sort,m.hidden FROM sys_menu m JOIN"
                     + " sys_role_menu rm ON rm.menu_id=m.id JOIN sys_role r ON r.id=rm.role_id JOIN"
                     + " sys_account_role ar ON ar.role_id=r.id WHERE ar.account_id=? AND r.status=1"
                     + " AND r.is_deleted=0 AND m.is_deleted=0 ORDER BY m.sort,m.id",
+                Permission.class,
                 id);
     }
 

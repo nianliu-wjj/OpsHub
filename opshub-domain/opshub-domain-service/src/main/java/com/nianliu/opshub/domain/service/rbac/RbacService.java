@@ -1,6 +1,7 @@
 package com.nianliu.opshub.domain.service.rbac;
 
 import com.nianliu.opshub.api.rbac.*;
+import com.nianliu.opshub.domain.model.rbac.*;
 
 import java.util.*;
 
@@ -11,14 +12,15 @@ import java.util.*;
  * @since 2026-11-18
  */
 public interface RbacService {
-    PageResult<Map<String, Object>> loginLogs(int page, int size, String keyword);
+    PageResult<LoginLog> loginLogs(int page, int size, String keyword);
 
     List<String> currentPermissions(String username);
 
-    List<Map<String, Object>> currentMenus(String username);
+    List<Permission> currentMenus(String username);
 
-    Map<String, Object> credentials(String username);
+    UserCredential credentials(String username);
 
     List<String> authorities(long id);
-    List<Map<String, Object>> menus(long id);
+
+    List<Permission> menus(long id);
 }
