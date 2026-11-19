@@ -7,4 +7,4 @@ import com.nianliu.opshub.infra.dal.dataobject.rbac.SysMenu;
  * @author nianliu-wjj
  * @since 2026-11-18
  */
-public interface SysMenuMapper extends BaseMapper<SysMenu> { }
+public interface SysMenuMapper extends BaseMapper<SysMenu> {}

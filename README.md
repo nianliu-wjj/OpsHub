@@ -16,7 +16,7 @@ OpsHub/
 │       └── rbac/                       # AccountRequest、RoleRequest、MenuRequest 等
 ├── opshub-api/                         # HTTP 接入层
 │   └── src/main/java/.../api/
-│       ├── rbac/RbacController.java    # 账号、角色、菜单、授权与日志接口
+│       ├── rbac/                       # User/Role/PermissionController 与公共查询接口
 │       └── auth/                       # 当前身份和 CSRF 接口
 ├── opshub-biz/                         # 业务实现模块群聚合父 POM
 │   ├── opshub-biz-shared/
@@ -24,12 +24,12 @@ OpsHub/
 │   │                                   # 七步模板、回调与降级守卫
 │   └── opshub-biz-impl/
 │       └── src/main/java/.../biz/impl/rbac/
-│           ├── RbacServiceImpl.java    # 实现 Service 接口、业务编排、密码处理与审计
+│           ├── *ServiceImpl.java       # 用户/角色/权限独立实现与公共查询
 │           └── RbacOperations.java     # 实现层内部的事务、关联校验与缓存协调组件
 ├── opshub-domain/                      # 领域模块群聚合父 POM
 │   ├── opshub-domain-service/
-│   │   └── src/main/java/.../domain/service/rbac/RbacService.java
-│   │                                   # RBAC 业务类接口，无实现层依赖
+│   │   └── src/main/java/.../domain/service/rbac/
+│   │                                   # User/Role/PermissionService 业务接口
 │   └── opshub-domain-model/
 │       └── src/main/java/.../domain/model/
 │           ├── exception/              # 业务异常
@@ -44,7 +44,8 @@ OpsHub/
 │   │   └── src/main/java/.../infra/dal/
 │   │       ├── dataobject/rbac/         # MyBatis-Flex 实体
 │   │       ├── daointerface/rbac/       # BaseMapper 接口
-│   │       ├── repository/rbac/         # 独立维护的参数化 SQL
+│   │       ├── dao/rbac/                # DAO 和 MyBatis 参数化 SQL 执行
+│   │       ├── repository/rbac/         # Repository 委托 DAO
 │   │       └── generator/              # 离线代码生成器
 │   └── opshub-infra-integration/
 │       └── src/main/java/.../infra/integration/cache/
@@ -123,3 +124,5 @@ dev/test 的 Swagger UI 位于 http://localhost:8080/swagger-ui.html，需要管
 - [OpenAPI 接口文档配置](docs/OpenAPI接口文档配置.md)
 - [RBAC 权限系统架构与生成指南](docs/RBAC权限系统架构与生成指南.md)
 - [RBAC 数据删除策略](docs/RBAC数据删除策略.md)
+
+用户、角色、权限拆分与当前数据访问链见 [实体拆分与DAO数据访问](docs/实体拆分与DAO数据访问.md)。

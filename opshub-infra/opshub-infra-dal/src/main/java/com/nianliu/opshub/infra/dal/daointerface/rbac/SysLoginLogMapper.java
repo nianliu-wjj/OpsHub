@@ -7,4 +7,4 @@ import com.nianliu.opshub.infra.dal.dataobject.rbac.SysLoginLog;
  * @author nianliu-wjj
  * @since 2026-11-18
  */
-public interface SysLoginLogMapper extends BaseMapper<SysLoginLog> { }
+public interface SysLoginLogMapper extends BaseMapper<SysLoginLog> {}

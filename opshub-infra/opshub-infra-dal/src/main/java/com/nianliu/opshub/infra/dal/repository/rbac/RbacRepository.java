@@ -1,82 +1,87 @@
 package com.nianliu.opshub.infra.dal.repository.rbac;
 
 import com.nianliu.opshub.api.rbac.PageResult;
+import com.nianliu.opshub.infra.dal.dao.rbac.RbacDao;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
+
 import org.springframework.stereotype.Repository;
+
 import java.util.*;
 
 /**
+ * RBAC 仓储，数据查询与持久化委托 DAO。
+ *
  * @author nianliu-wjj
  * @since 2026-11-18
  */
 @Repository
 @RequiredArgsConstructor
 public class RbacRepository {
-    private final JdbcTemplate jdbc;
-    private static final Map<String,String> TABLES=Map.of("accounts","sys_account","roles","sys_role","menus","sys_menu","login-logs","sys_login_log");
-    private static final Map<String,String> COLUMNS=Map.of(
-        "accounts","id,username,icon,email,type,real_name AS realName,remark,create_time AS createTime,update_time AS updateTime,login_time AS loginTime,enable,`lock` AS locked,version",
-        "roles","id,name,code,description,create_time AS createTime,status,sort,version",
-        "menus","id,parent_id AS parentId,icon,name,code,url,method,type,sort,redirect,hidden,description,create_time AS createTime,version",
-        "login-logs","id,created_time AS createdTime,account,ip,user_agent AS userAgent,status,reason");
-    public PageResult<Map<String,Object>> page(String resource,int page,int size,String keyword) {
-        String table=TABLES.get(resource); if(table==null) throw new IllegalArgumentException("非法资源");
-        String field=resource.equals("accounts")?"username":resource.equals("login-logs")?"account":"name";
-        String where=" WHERE "+(resource.equals("login-logs")?"":"is_deleted=0 AND ")+field+" LIKE ?"; String term="%"+keyword+"%";
-        Long total=jdbc.queryForObject("SELECT COUNT(*) FROM "+table+where,Long.class,term);
-        var rows=jdbc.queryForList("SELECT "+COLUMNS.get(resource)+" FROM "+table+where+" ORDER BY id DESC LIMIT ? OFFSET ?",term,size,(long)(page-1)*size);
-        return new PageResult<>(total==null?0:total,page,size,rows);
+    private final RbacDao dao;
+
+    public PageResult<Map<String, Object>> page(
+            String resource, int page, int size, String keyword) {
+        return dao.page(resource, page, size, keyword);
     }
-    public Map<String,Object> get(String resource,long id) {
-        var rows=jdbc.queryForList("SELECT "+COLUMNS.get(resource)+" FROM "+TABLES.get(resource)+" WHERE "+(resource.equals("login-logs")?"":"is_deleted=0 AND ")+"id=?",id);
-        return rows.isEmpty()?null:rows.getFirst();
+
+    public Map<String, Object> get(String resource, long id) {
+        return dao.get(resource, id);
     }
-    public Map<String,Object> credentials(String username) {
-        var rows=jdbc.queryForList("SELECT id,username,password,enable,`lock` AS locked FROM sys_account WHERE is_deleted=0 AND username=?",username);
-        return rows.isEmpty()?null:rows.getFirst();
+
+    public Map<String, Object> credentials(String username) {
+        return dao.credentials(username);
     }
-    public long version() { return Objects.requireNonNull(jdbc.queryForObject("SELECT version FROM sys_rbac_version WHERE id=1",Long.class)); }
-    public void changed() { if(jdbc.update("UPDATE sys_rbac_version SET version=version+1 WHERE id=1")!=1) throw new IllegalStateException("RBAC版本行不存在"); }
+
+    public long version() {
+        return dao.version();
+    }
+
+    public void changed() {
+        dao.changed();
+    }
+
     public List<String> authorities(long id) {
-        List<String> roles=jdbc.queryForList("SELECT DISTINCT CONCAT('ROLE_',UPPER(r.code)) FROM sys_role r JOIN sys_account_role ar ON ar.role_id=r.id WHERE ar.account_id=? AND r.status=1 AND r.is_deleted=0",String.class,id);
-        List<String> permissions=jdbc.queryForList("SELECT DISTINCT m.code FROM sys_menu m JOIN sys_role_menu rm ON rm.menu_id=m.id JOIN sys_role r ON r.id=rm.role_id JOIN sys_account_role ar ON ar.role_id=r.id WHERE ar.account_id=? AND r.status=1 AND r.is_deleted=0 AND m.is_deleted=0",String.class,id);
-        var result=new ArrayList<>(roles); result.addAll(permissions); return result;
+        return dao.authorities(id);
     }
-    public List<Map<String,Object>> grantedMenus(long id) {
-        return jdbc.queryForList("SELECT DISTINCT m.id,m.parent_id AS parentId,m.name,m.code,m.url,m.type,m.sort,m.hidden FROM sys_menu m JOIN sys_role_menu rm ON rm.menu_id=m.id JOIN sys_role r ON r.id=rm.role_id JOIN sys_account_role ar ON ar.role_id=r.id WHERE ar.account_id=? AND r.status=1 AND r.is_deleted=0 AND m.is_deleted=0 ORDER BY m.sort,m.id",id);
+
+    public List<Map<String, Object>> grantedMenus(long id) {
+        return dao.grantedMenus(id);
     }
-    public List<Long> assignments(String resource,long id) {
-        return jdbc.queryForList(resource.equals("accounts")?"SELECT role_id FROM sys_account_role WHERE account_id=?":"SELECT menu_id FROM sys_role_menu WHERE role_id=?",Long.class,id);
+
+    public List<Long> assignments(String resource, long id) {
+        return dao.assignments(resource, id);
     }
-    public long insert(String table,Map<String,Object> values) {
-        var keys=new ArrayList<>(values.keySet());
-        var holder=new org.springframework.jdbc.support.GeneratedKeyHolder();
-        jdbc.update(connection->{ var statement=connection.prepareStatement("INSERT INTO "+table+" ("+String.join(",",keys)+") VALUES ("+String.join(",",Collections.nCopies(keys.size(),"?"))+")",java.sql.Statement.RETURN_GENERATED_KEYS); for(int i=0;i<keys.size();i++) statement.setObject(i+1,values.get(keys.get(i))); return statement; },holder);
-        return Objects.requireNonNull(holder.getKey()).longValue();
+
+    public long insert(String table, Map<String, Object> values) {
+        return dao.insert(table, values);
     }
-    public void update(String table,long id,long expectedVersion,Map<String,Object> values) {
-        var args=new ArrayList<>(values.values());args.add(id);args.add(expectedVersion);
-        if(jdbc.update("UPDATE "+table+" SET "+String.join(",",values.keySet().stream().map(k->k+"=?").toList())+",version=version+1 WHERE id=? AND version=? AND is_deleted=0",args.toArray())!=1) throw com.nianliu.opshub.domain.model.exception.OpsException.rejected("A0409","数据已修改，请刷新后重试");
+
+    public void update(String table, long id, long expectedVersion, Map<String, Object> values) {
+        dao.update(table, id, expectedVersion, values);
     }
-    public void delete(String resource,long id,long expectedVersion) {
-        if(resource.equals("accounts")) jdbc.update("DELETE FROM sys_account_role WHERE account_id=?",id);
-        if(resource.equals("roles")) { jdbc.update("DELETE FROM sys_account_role WHERE role_id=?",id);jdbc.update("DELETE FROM sys_role_menu WHERE role_id=?",id); }
-        if(resource.equals("menus")) jdbc.update("DELETE FROM sys_role_menu WHERE menu_id=?",id);
-        if(jdbc.update("UPDATE "+TABLES.get(resource)+" SET is_deleted=1,version=version+1 WHERE id=? AND version=? AND is_deleted=0",id,expectedVersion)!=1) throw com.nianliu.opshub.domain.model.exception.OpsException.rejected("A0409","数据已修改，请刷新后重试");
+
+    public void delete(String resource, long id, long expectedVersion) {
+        dao.delete(resource, id, expectedVersion);
     }
-    public void replaceAssignments(String resource,long id,List<Long> ids) {
-        String table=resource.equals("accounts")?"sys_account_role":"sys_role_menu";
-        String owner=resource.equals("accounts")?"account_id":"role_id",target=resource.equals("accounts")?"role_id":"menu_id";
-        jdbc.update("DELETE FROM "+table+" WHERE "+owner+"=?",id);
-        for(Long targetId:new LinkedHashSet<>(ids)) jdbc.update("INSERT INTO "+table+" ("+owner+","+target+") VALUES (?,?)",id,targetId);
+
+    public void replaceAssignments(String resource, long id, List<Long> ids) {
+        dao.replaceAssignments(resource, id, ids);
     }
-    public void lockGraph() { jdbc.queryForObject("SELECT version FROM sys_rbac_version WHERE id=1 FOR UPDATE",Long.class); }
-    public void checkAndAdvance(String resource,long id,long version) {
-        if(jdbc.update("UPDATE "+TABLES.get(resource)+" SET version=version+1 WHERE id=? AND version=? AND is_deleted=0",id,version)!=1) throw com.nianliu.opshub.domain.model.exception.OpsException.rejected("A0409","数据已修改，请刷新后重试");
+
+    public void lockGraph() {
+        dao.lockGraph();
     }
-    public List<Long> childMenus(long id) { return jdbc.queryForList("SELECT id FROM sys_menu WHERE is_deleted=0 AND parent_id=?",Long.class,id); }
-    public void loginLog(String username,String ip,String agent,String status,String reason) {
-        jdbc.update("INSERT INTO sys_login_log (created_time,account,ip,user_agent,status,reason) VALUES (CURRENT_TIMESTAMP,?,?,?,?,?)",username,ip,agent,status,reason);
+
+    public void checkAndAdvance(String resource, long id, long version) {
+        dao.checkAndAdvance(resource, id, version);
+    }
+
+    public List<Long> childMenus(long id) {
+        return dao.childMenus(id);
+    }
+
+    public void loginLog(String username, String ip, String agent, String status, String reason) {
+        dao.loginLog(username, ip, agent, status, reason);
     }
 }

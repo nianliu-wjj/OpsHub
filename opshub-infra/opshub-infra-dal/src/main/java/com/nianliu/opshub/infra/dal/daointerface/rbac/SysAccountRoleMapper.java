@@ -7,4 +7,4 @@ import com.nianliu.opshub.infra.dal.dataobject.rbac.SysAccountRole;
  * @author nianliu-wjj
  * @since 2026-11-18
  */
-public interface SysAccountRoleMapper extends BaseMapper<SysAccountRole> { }
+public interface SysAccountRoleMapper extends BaseMapper<SysAccountRole> {}

@@ -7,4 +7,4 @@ import com.nianliu.opshub.infra.dal.dataobject.rbac.SysRoleMenu;
  * @author nianliu-wjj
  * @since 2026-11-18
  */
-public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu> { }
+public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu> {}
